@@ -1,0 +1,106 @@
+apt-get update && apt-get upgrade
+apt-get install php
+apt install php-curl && apt install php-dom && apt install php-gd && apt install php-intl && apt install php-mbstring && apt install php-mysql && apt install php-zip && apt install php-fpm
+nano /etc/php/8.3/fpm -> memory_limit = 512M
+apt install composer
+sudo apt install nodejs && apt install npm
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+To upgrade to latest version (and not current stable) version, you can use
+sudo n latest
+Fix PATH:
+sudo apt-get install --reinstall nodejs     # fix /usr/bin/node
+reboot
+apt install nginx
+cd /etc/nginx/sites-avalable/
+nano pizzaahaus.de
+
+
+server {
+    listen 80;
+
+    index index.php index.html;
+    server_name 138.197.181.104;
+
+    client_max_body_size 32M;
+
+    root /var/www/html/shopware/public;
+
+    location /recovery/update/ {
+        index index.php;
+        try_files $uri /recovery/install/index.php$is_args$args;
+    }
+
+    location ~ ^/(recovery\/update\/index|index|shopware-installer\.phar)\.php(/|$) {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        include fastcgi.conf;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_buffers 8 16k;
+        fastcgi_buffer_size 32k;
+        proxy_connect_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
+        send_timeout 300s;
+        client_body_buffer_size 128k;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location = /sitemap.xml {
+        log_not_found off;
+        access_log off;
+        try_files $uri /;
+    }
+
+    location = /robots.txt {
+        log_not_found off;
+        access_log off;
+        try_files $uri /;
+    }
+
+    location ~* ^.+\.(?:css|cur|js|jpe?g|gif|ico|png|svg|webp|avif|html|woff|woff2|xml)$ {
+        expires 1y;
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+
+        access_log off;
+
+        # The directive enables or disables messages in error_log about files not found on disk.
+        log_not_found off;
+
+        tcp_nodelay off;
+
+        ## Set the OS file cache.
+        open_file_cache max=3000 inactive=120s;
+        open_file_cache_valid 45s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
+
+        location ~* ^.+\.svg$ {
+            add_header Content-Security-Policy "script-src 'none'";
+        }
+    }
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+}
+
+
+sudo ln -s /etc/nginx/sites-available/example.com.conf /etc/nginx/sites-enabled/example.com.conf
+sudo apt install mysql-server
+sudo systemctl start mysql.service
+nano /etc/mysql/my.cnf -> max_allowed_packet=32M
+
+sudo apt install mariadb-server
+sudo mysql_secure_installation
+
+sudo mysql -u root -p
+CREATE DATABASE shopware;
+CREATE USER 'libanosdb'@'localhost' IDENTIFIED BY '0913023534y';
+GRANT ALL PRIVILEGES ON shopware.* TO 'libanosdb'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+composer create-project shopware/production shopware
+bin/console system:install --basic-setup
+sudo chown -R www-data:www-data /var/www/html/shopware
+sudo chmod -R 755 /var/www/html/shopware
