@@ -106,4 +106,6 @@ sudo chown -R www-data:www-data /var/www/html/shopware
 sudo chmod -R 755 /var/www/html/shopware
 
 Consume messages
+bin/console messenger:consume failed async --time-limit=60
+bin/console scheduled-task:run --time-limit=60
 bin/console messenger:consume async --time-limit=60 --memory-limit=128M
