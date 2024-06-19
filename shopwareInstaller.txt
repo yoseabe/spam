@@ -104,3 +104,6 @@ composer create-project shopware/production shopware
 bin/console system:install --basic-setup
 sudo chown -R www-data:www-data /var/www/html/shopware
 sudo chmod -R 755 /var/www/html/shopware
+
+Consume messages
+bin/console messenger:consume async --time-limit=60 --memory-limit=128M
