@@ -102,8 +102,7 @@ FLUSH PRIVILEGES;
 EXIT;
 composer create-project shopware/production shopware
 bin/console system:install --basic-setup
-sudo chown -R www-data:www-data /var/www/html/shopware
-sudo chmod -R 755 /var/www/html/shopware
+sudo chown -R www-data:www-data /var/www/html/shopware && sudo chmod -R 755 /var/www/html/shopware
 
 Consume messages
 bin/console messenger:consume failed async --time-limit=60
