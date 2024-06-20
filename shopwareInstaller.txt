@@ -109,3 +109,4 @@ Consume messages
 bin/console messenger:consume failed async --time-limit=60
 bin/console scheduled-task:run --time-limit=60
 bin/console messenger:consume async --time-limit=60 --memory-limit=128M
+bin/build-storefront.sh
